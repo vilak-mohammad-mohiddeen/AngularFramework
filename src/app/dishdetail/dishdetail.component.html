@@ -1,0 +1,80 @@
+<div class="container"
+    fxLayout="row"
+    fxLayout.sm="column"
+    fxLayout.xs="column"
+    fxLayoutAlign.gt-md="space-around center"
+    fxLayoutGap="10px" 
+    fxLayoutGap.xs="0">
+
+    <div fxFlex="40">
+        <mat-card  *ngIf="dish" [@visibility]="visibility">
+            <mat-card-header>
+                <mat-card-title>
+                    {{dish.name | uppercase}}
+                </mat-card-title>
+            </mat-card-header>
+            <img src="{{baseURL + dish.image}}" alt={{dish.name}}> 
+            <div *ngIf="errMess">
+                <h2>Error</h2>
+                <h4>{{errMess}}</h4>
+              </div>
+            <mat-card-content>
+                {{dish.description}}
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button [routerLink]="['/dishdetail',prev]">
+                    <span class="fa fa-chevron-left fa-lg"></span>
+                </button>
+                <button mat-button (click)="goBack()">BACK</button>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+                <button mat-button [routerLink]="['/dishdetail',next]">
+                    <span class="fa fa-chevron-right fa-lg"></span>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    
+    </div>
+
+    <div fxFlex="40">
+        <mat-card  *ngIf="dish" [@visibility]="visibility">
+            <mat-card-header>
+                <mat-card-title>
+                    COMMENTS
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content *ngFor="let com of dish.comments">
+                <mat-list>{{com.comment}}</mat-list>
+                <mat-list>{{com.rating}}Stars</mat-list>
+                <mat-list>--{{com.author}} {{com.date | date}}</mat-list>
+            </mat-card-content>
+        </mat-card>
+        <mat-list *ngIf="this.comForm.valid">
+            <mat-list-item>
+                <p matLine>{{comForm.value.comment}}</p>
+                <p matLine>{{comForm.value.rating}} Stars</p>
+                <p matLine>--{{comForm.value.author}}</p>
+            </mat-list-item>
+        </mat-list>
+
+        <form novalidate [formGroup]="comForm" (ngSubmit)="submitValue()">
+            <mat-form-field>
+              <input type="text" placeholder="Author" formControlName="author" matInput>
+              <mat-error *ngIf="formErrors.author">{{formErrors.author}}</mat-error>
+            </mat-form-field>
+            <table class="form-size">
+                <td>
+                  <mat-slider formControlName="rating" min="1" max="5" step="1" thumbLabel tickInterval="1"></mat-slider>
+                </td>
+                </table>
+            <mat-form-field>
+              <textarea type="text" placeholder="Comment" formControlName="comment" matInput rows="12" ></textarea>
+              <mat-error *ngIf="formErrors.comment">{{formErrors.comment}}</mat-error>
+            </mat-form-field><br>
+            <button type="submit" mat-button class="background-primary text-floral-white"
+            [disabled]="comForm.invalid">Submit</button>
+        </form>
+    </div>
+ 
+
+</div>
